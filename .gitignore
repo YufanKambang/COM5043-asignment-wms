@@ -1,0 +1,35 @@
+# Virtual environments
+.venv/
+env/
+ENV/
+venv/
+
+#secret files
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+
+# Django-specific
+*.sqlite3
+*.log
+*.pot
+*.pyc
+
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+
+# Docker files and volumes
+*.pid
+*.tar
+*.db
+docker-compose.override.yml
+
+# OS-specific
+.DS_Store
+Thumbs.db
