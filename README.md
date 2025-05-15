@@ -4,3 +4,8 @@ This is the repository for the warehouse management system, that i have been ass
 super user credentaials
 username: superroot
 password: postgres
+
+i have made the migration file warehouse/migrations/0001_initial.py, but new owners of the system will have to run the migration commands
+// docker compose up --build                        //
+// docker compose exec web python manage.py migrate //
+
