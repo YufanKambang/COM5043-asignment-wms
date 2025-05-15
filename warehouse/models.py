@@ -11,6 +11,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def describe(self):
+        return f"Model: {self.__class__.__name__}, ID: {self.id}"
 
     def is_low_stock(self):
         return self.stock_quantity <= self.restock_indicator
@@ -23,6 +26,9 @@ class Supplier(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def describe(self):
+        return f"Model: {self.__class__.__name__}, ID: {self.id}"
 
 class PurchaseOrder(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
@@ -33,6 +39,9 @@ class PurchaseOrder(models.Model):
 
     def __str__(self):
         return f"Order #{self.product.name} from {self.supplier.name}"
+    
+    def describe(self):
+        return f"Model: {self.__class__.__name__}, ID: {self.id}"
 
 class CustomerOrder(models.Model):
     customer_name = models.CharField(max_length=255)
@@ -41,6 +50,9 @@ class CustomerOrder(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} by {self.customer_name}"
+    
+    def describe(self):
+        return f"Model: {self.__class__.__name__}, ID: {self.id}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(CustomerOrder, related_name='items', on_delete=models.CASCADE)
@@ -50,6 +62,9 @@ class OrderItem(models.Model):
 
     def subtotal(self):
         return self.quantity * self.price_at_order
+    
+    def describe(self):
+        return f"Model: {self.__class__.__name__}, ID: {self.id}"
     
 class Transaction(models.Model):
     TRANSACTION_TYPES = (
@@ -65,3 +80,6 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.date}: {self.transaction_type} of {self.product.name}"
+    
+    def describe(self):
+        return f"Model: {self.__class__.__name__}, ID: {self.id}"
