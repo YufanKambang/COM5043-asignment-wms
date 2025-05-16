@@ -36,12 +36,12 @@ jobs:
     
     - name: Set up Docker Compose
       run: |
-        docker-compose -f docker-compose.yml up -d --build
+        docker compose -f docker-compose.yml up -d --build
     
     - name: Wait for DB to be ready
       run: |
         echo "Waiting for PostgreSQL..."
-        docker-compose exec db bash -c "until pg_isready -U \$POSTGRES_USER; do sleep 1; done"
+        docker compose exec db bash -c "until pg_isready -U \$POSTGRES_USER; do sleep 1; done"
       env:
         POSTGRES_USER: postgres  # Ensure this matches your .env or docker-compose config
     
@@ -54,11 +54,11 @@ jobs:
 
     - name: Run migrations
       run: |
-        docker-compose exec web python manage.py migrate
+        docker compose exec web python manage.py migrate
 
     - name: Run pytest inside container
       run: |
-        docker-compose exec web pytest
+        docker compose exec web pytest
 
     - name: Run tests
       run: |
@@ -67,4 +67,4 @@ jobs:
     - name: Shut down
       if: always()
       run: |
-        docker-compose down -v
+        docker compose down -v
