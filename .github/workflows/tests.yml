@@ -36,7 +36,7 @@ jobs:
     
     - name: Set up Docker Compose
       run: |
-        docker compose -f docker-compose.yml up -d --build
+        docker compose -f docker-compose.yaml up -d --build
     
     - name: Wait for DB to be ready
       run: |
