@@ -19,7 +19,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports: ['5432:5432']
         options: >-
-          --health-cmd="pg_isready"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -28,25 +28,43 @@ jobs:
       POSTGRES_DB: wms_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: db
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-
-    - name: Install dependencies
+    
+    - name: Set up Docker Compose
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        docker-compose -f docker-compose.yml up -d --build
+    
+    - name: Wait for DB to be ready
+      run: |
+        echo "Waiting for PostgreSQL..."
+        docker-compose exec db bash -c "until pg_isready -U \$POSTGRES_USER; do sleep 1; done"
+      env:
+        POSTGRES_USER: postgres  # Ensure this matches your .env or docker-compose config
+    
+    - name: Wait for PostgreSQL to be ready
+      run: |
+        until pg_isready -h localhost -p 5432 -U postgres; do
+          echo "Waiting for postgres..."
+          sleep 1
+        done
 
     - name: Run migrations
       run: |
-        docker compose exec web python manage.py migrate
+        docker-compose exec web python manage.py migrate
+
+    - name: Run pytest inside container
+      run: |
+        docker-compose exec web pytest
 
     - name: Run tests
       run: |
         pytest
+
+    - name: Shut down
+      if: always()
+      run: |
+        docker-compose down -v
