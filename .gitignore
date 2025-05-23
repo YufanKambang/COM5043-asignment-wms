@@ -11,6 +11,7 @@ venv/
 __pycache__/
 *.py[cod]
 *.so
+*.pytest_*
 
 # Django-specific
 *.sqlite3
