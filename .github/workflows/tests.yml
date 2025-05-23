@@ -60,10 +60,6 @@ jobs:
       run: |
         docker compose exec web pytest
 
-    - name: Run tests
-      run: |
-        pytest
-
     - name: Shut down
       if: always()
       run: |
