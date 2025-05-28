@@ -10,3 +10,6 @@ i have made the migration file warehouse/migrations/0001_initial.py, but new own
 
 `docker compose exec web python manage.py migrate`
 
+testing:
+pytest
+Will be used using Github actions or in-container testing too `docker compose run web pytest`

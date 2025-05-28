@@ -1,0 +1,73 @@
+name: Django Tests # name of this CI test workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    # using the lastest ubunut release provided by Github
+    runs-on: ubuntu-latest
+
+    # this section is to define the services that will be needed for testing
+    services:
+      # the service here is a postgreSQL container for test environment
+      postgres:
+        image: postgres:15
+        # setting environment variable for this container
+        env:
+          POSTGRES_DB: wms_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        # these are health checks that ensure postgreSQL is ready before app attempts to connect 
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    
+    # this set of environemnt variable are for all the steps in the job, and for Django to connect to our database
+    env:
+      POSTGRES_DB: wms_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: db # Docker compose will use this to connect to internal container call db
+    
+    steps:
+      # step 1: checkout the repository into the runner
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+      # step 2: using docker compose build&start 
+    - name: Set up Docker Compose
+      run: |
+        docker compose -f docker-compose.yaml up -d --build
+    
+      # step 3: wait for db to become available, using docker-compose exec
+      # ensuring database inside container is fully ready before Django tries to connect
+    - name: Wait for DB to be ready
+      run: |
+        echo "Waiting for PostgreSQL..."
+        docker compose exec db bash -c "until pg_isready -U \$POSTGRES_USER; do sleep 1; done"
+      # needed for inline command under run: , to substitute properly
+      env:
+        POSTGRES_USER: postgres  # Ensure this matches your .env or docker-compose config
+
+      # step 4: run Django migration so the tables are generated
+    - name: Run migrations
+      run: |
+        docker compose exec web python manage.py migrate
+
+      # step 5: run tests using pytest inside the Django container 
+    - name: Run pytest inside container
+      run: |
+        docker compose exec web pytest
+
+      # step 6: tear down the container and the volumes to keep the CI clean
+    - name: Shut down
+      # line below ensures that it will always run even when earlier stops fail
+      if: always()
+      run: |
+        docker compose down -v
