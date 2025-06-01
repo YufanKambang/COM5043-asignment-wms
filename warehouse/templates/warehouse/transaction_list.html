@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in transactions %}
+            <tr>
+                <td>{{ t.transaction_type }}</td>
+                <td>{{ t.product.name }}</td>
+                <td>{{ t.quantity }}</td>
+                <td>£{{ t.amount }}</td>
+                <td>{{ t.date }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">No transactions recorded.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+<!-- list the transaction in a table with details -->
+<!-- useful for a simple finance reporting -->

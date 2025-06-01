@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Mark Purchase Order as Received</h2>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button class="btn btn-success" type="submit">Confirm</button>
+    <a class="btn btn-secondary" href="{% url 'customer_order_list' %}">Cancel</a>
+
+</form>
+
+{% endblock %}

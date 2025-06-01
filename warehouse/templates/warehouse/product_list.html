@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+<!-- this top line will let this page know to inherit from base.html -->
+
+{% block title %}Products{% endblock %}
+<!-- setting the page title in the browser tab -->
+
+{% block content %}
+
+<!-- this will be a button to go to form page to create new product -->
+<a class="btn btn-primary mb-3" href="{% url 'product_create' %}">+ New Product</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Stock</th>
+            <th>Re-order Lvl</th>
+            <th>Selling Price $</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for p in products %}
+        <!-- loops throwgh the products that are passed by in view -->
+        <!-- the if statement below will cause the product row to turn red if the stock is low -->
+            <tr class="{% if p.is_low_stock %}table-danger{% endif %}">
+                <!-- outputting field values to show the user -->
+                <td>{{ p.name }}</td>
+                <td>{{ p.stock_quantity }}</td>
+                <td>{{ p.restock_indicator }}</td>
+                <td>{{ p.selling_price }}</td>
+
+                <td>
+                    <!-- button to update a product -->
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'product_update' p.pk %}">Edit</a>
+                    <!-- button to delete a product -->
+                    <a class="btn btn-sm btn-outline-danger"    href="{% url 'product_delete' p.pk %}">Delete</a>
+                </td>
+            </tr>
+        {% empty %}
+        <!-- kind of like a catch, showing a message if the list is empty -->
+            <tr><td colspan="3">No products yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

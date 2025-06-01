@@ -1,0 +1,19 @@
+<!-- This is the parent template that defines a common structure for my site -->
+<!DOCTYPE html>
+<html lang="en">
+<!-- ^ decides the language -->
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}WMS{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- this link loads Bootstrap CSS from a content delivery network -->
+    <!-- aplies styling to my html elements -->
+</head>
+<body class="container py-4">
+    <h1 class="mb-4"><a href="/">BNU Warehouse Management System</a></h1>
+
+    {% block content %}
+    <!-- this is where the child template will insert its own content -->
+    {% endblock %}
+</body>
+</html>

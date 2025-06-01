@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Welcome to the BNU Warehouse System</h2>
+<ul>
+    <li><a href="{% url 'product_list' %}">View Products</a></li>
+    <li><a href="{% url 'supplier_list' %}">View Suppliers</a></li>
+    <li><a href="{% url 'customer_order_list' %}">View Customer Orders</a></li>
+    <li><a href="{% url 'purchase_order_list' %}">View Purchase Orders</a></li>
+    <li><a href="{% url 'transaction_list' %}">View Transactions</a></li>
+    <li><a href="{% url 'finance_report' %}">Finance Report</a></li>
+</ul>
+{% endblock %}

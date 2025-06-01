@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>New Customer Order</h2>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <div class="mb-2">
+        Customer: <input name="customer_name" class="form-control" required>
+    </div>
+
+    <div class="mb-2">
+        Email: <input type="email" name="customer_email" class="form-control" required>
+    </div>
+
+    {{ formset.management_form }}
+    {% for form in formset %}
+        <div class="row mb-2">
+            <div class="col-8">{{ form.product }}</div>
+            <div class="col-4">{{ form.quantity }}</div>
+        </div>
+    {% endfor %}
+
+    <button class="btn btn-success" type="submit">Save order</button>
+
+</form>
+{% endblock %}
