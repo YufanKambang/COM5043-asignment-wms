@@ -12,6 +12,7 @@ __pycache__/
 *.py[cod]
 *.so
 *.pytest_*
+.coverage
 
 # Django-specific
 *.sqlite3
