@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Orders{% endblock %}
+
+{% block content %}
+
+<li><a class="btn btn-primary" href="{% url 'customer_order_create' %}">Create New Order</a></li>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.order_date }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">No customer orders yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+<!-- this will display the orders ID, name and date -->
+<!-- able to work with a view like customer_orders-->
