@@ -1,3 +1,6 @@
+"""This is to testing the functionality at  warehouse/models.py"""
+
+
 import pytest
 
 from unittest.mock import Mock
@@ -22,7 +25,7 @@ def test_model_create(model_class, create_kwargs, expected_result):
 def test_product_is_low_stock():
     product = Product.objects.create(
         name="Widget", stock_quantity=2, restock_indicator=5,
-        cost_price=3.0, selling_price=5.0
+        cost_price=3.00, selling_price=5.00
     )
     assert product.is_low_stock() is True
 
