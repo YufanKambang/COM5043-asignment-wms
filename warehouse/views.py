@@ -110,6 +110,7 @@ def order_create(request):
                 item.order = order
                 item.price_at_order = item.product.selling_price
                 item.save()
+
             return redirect('customer_order_list')
     
     else:
@@ -148,23 +149,34 @@ class transaction_list(ListView):
 class FinanceReportView(TemplateView):
     template_name = 'warehouse/finance_report.html'
 
+    # here we are looking to extend the inherited template TemplateView
+    # the method get_context_data() is used to add variable to the template
     def get_context_data(self, **kwargs):
+        
+        #gets the existing contexts like user/session-info from parent class and store in context variable
         context = super().get_context_data(**kwargs)
 
+        # this filter through Transaction for all records where transaction_type = 'SALE'
+        # the part .aggregate(Sum('amount')) will in this logic sum up all the sale amounts
+        # the result value accessed through the key ['amount__sum']
+        # if there are None then will default to 0, instead of breaking
         sales_total = Transaction.objects.filter(
             transaction_type='SALE'
         ).aggregate(Sum('amount'))['amount__sum'] or 0
 
+        # purchase_total has the same logic as for sales_total however it for where transaction_type = 'SALE'
         purchase_total = Transaction.objects.filter(
             transaction_type='PURCHASE'
         ).aggregate(Sum('amount'))['amount__sum'] or 0
 
         net_income = sales_total - purchase_total
 
+        # Now adding all the worked out information into a context dictionary, back to context
         context.update({
             'sales_total': sales_total,
             'purchase_total': purchase_total,
             'net_income': net_income,
-            'transactions': Transaction.objects.order_by('-date')[:20],  # optional
+            'transactions': Transaction.objects.order_by('-date')[:20],  # this optional code says to give you the most recent 20 records
         })
+
         return context
